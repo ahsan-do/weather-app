@@ -1,29 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import { PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { ThemeProvider, useAppTheme } from './components/ThemeContext';
+import { UnitProvider } from './components/UnitContext';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+function AppContent() {
+    const { theme, isDark } = useAppTheme();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+    return (
+        <PaperProvider theme={theme}>
+            <StatusBar style={isDark ? 'light' : 'dark'} />
+            <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+            </Stack>
+        </PaperProvider>
+    );
+}
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+export default function Layout() {
+    return (
+        <ThemeProvider>
+            <UnitProvider>
+                <AppContent />
+            </UnitProvider>
+        </ThemeProvider>
+    );
 }
