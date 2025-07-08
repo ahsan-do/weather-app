@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import {View, StyleSheet, ActivityIndicator, Text, ScrollView} from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import * as Location from 'expo-location';
 import axios from 'axios';
@@ -9,6 +9,8 @@ import { useAppTheme } from '../components/ThemeContext';
 import { useSettings } from '../components/UnitContext';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Feather from "@expo/vector-icons/Feather";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import ForecastComponent from "@/app/(tabs)/Forecast";
 
 const getWeatherIcon = (main, description) => {
 
@@ -129,7 +131,7 @@ export default function City() {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.header}>
 
             </View>
@@ -170,10 +172,15 @@ export default function City() {
                 </Card.Content>
             </Card>
 
+            <View style={styles.forcastContainer}><Ionicons name="time" size={24} color={theme.colors.onSurface} />
+            <Text style={styles.forcastText}>5 Day Forecast</Text>
+            </View>
+            <ForecastComponent city={weather?.name}/>
+
             <Button mode="contained" onPress={() => router.push('/home')} style={styles.button}>
                 Back to Home
             </Button>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -257,5 +264,14 @@ const createStyles = (theme) => StyleSheet.create({
         color: theme.colors.onSurface,
         fontSize: 16,
         textAlign: 'center',
+    },
+    forcastContainer:{
+      flexDirection:'row',
+        gap:10,
+        marginLeft:20
+    },
+    forcastText:{
+        color: theme.colors.onSurface,
+        fontSize: 16,
     }
 })

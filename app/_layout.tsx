@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider, useAppTheme } from './components/ThemeContext';
 import { UnitProvider } from './components/UnitContext';
 
-function AppContent() {
+function App() {
     const { theme, isDark } = useAppTheme();
 
     return (
@@ -22,7 +22,7 @@ export default function Layout() {
     return (
         <ThemeProvider>
             <UnitProvider>
-                <AppContent />
+                <App />
             </UnitProvider>
         </ThemeProvider>
     );

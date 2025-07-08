@@ -192,6 +192,9 @@ export default function HomeScreen() {
                     />
                 </Menu>
             </Card>
+            <View style={styles.forcastContainer}><Ionicons name="time" size={24} color={theme.colors.onSurface} />
+                <Text style={styles.forcastText}>5 Day Forecast</Text>
+            </View>
             <ForecastComponent city={weather?.name}/>
             <Button mode="contained" onPress={() => router.push('/search')} style={styles.button}>
                 Search City
@@ -274,5 +277,14 @@ const createStyles = (theme) => StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
+    },
+    forcastContainer:{
+        flexDirection:'row',
+        gap:10,
+        marginLeft:20
+    },
+    forcastText:{
+        color: theme.colors.onSurface,
+        fontSize: 16,
     }
 });
