@@ -15,7 +15,7 @@ import ForecastComponent from "@/app/(tabs)/Forecast";
 const getWeatherIcon = (main, description) => {
 
     const hours:number = new Date().getHours()
-    const isDayTime:boolean = hours > 6 && hours < 20
+    const isDayTime:boolean = hours > 6 && hours < 18
 
     const iconMap = {
         Clear: 'weather-sunny',

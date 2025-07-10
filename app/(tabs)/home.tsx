@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 
-import { Card, Button, Text, Menu, Divider } from 'react-native-paper';
+import {Card, Button, Text, Menu, Divider, MD3Theme} from 'react-native-paper';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,11 +13,18 @@ import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const getWeatherIcon = (main: any, description: any) => {
-    const hours:number = new Date().getHours()
-    const isDayTime:boolean = hours > 6 && hours < 20
+import {
+    IconMap,
+    WeatherData,
+    CloudsMap,
+} from './types'
 
-    const iconMap = {
+
+const getWeatherIcon = (main: string, description: string) => {
+    const hours: number = new Date().getHours()
+    const isDayTime: boolean = hours > 6 && hours < 19
+
+    const iconMap: IconMap = {
         Clear: 'weather-sunny',
         Clouds: {
             'few clouds': isDayTime ? 'weather-partly-cloudy': 'weather-night-partly-cloudy',
@@ -34,16 +41,15 @@ const getWeatherIcon = (main: any, description: any) => {
         default: 'weather-cloudy',
     };
 
-
-
     if (main && iconMap[main] && typeof iconMap[main] === 'object') {
-        return iconMap[main][description?.toLowerCase()] || iconMap[main].default;
+        return (iconMap[main] as CloudsMap)[description?.toLowerCase()] || (iconMap[main] as CloudsMap).default;
     }
     return iconMap[main] || iconMap.default;
 };
 
+
 export default function HomeScreen() {
-    const [weather, setWeather] = useState(null);
+    const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
     const [menuVisible, setMenuVisible] = useState(false);
     const router = useRouter();
@@ -73,8 +79,9 @@ export default function HomeScreen() {
         }
     }, [searchWeather]);
 
-    const fetchWeatherByCoords = async (lat: number, lon: number, unit: 'metric' | 'imperial') => {
+    const fetchWeatherByCoords = async (lat:number, lon:number, unit: 'metric' | 'imperial') => {
         try {
+
             const response = await axios.get(
                 `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${process.env.EXPO_PUBLIC_WEATHER_API}`
             );
@@ -136,7 +143,8 @@ export default function HomeScreen() {
             </View>
             <Card style={styles.card}>
                 <Card.Content>
-                    <Text style={styles.cityTitle}>{weather?.name || 'Loading...'}, {weather.sys.country}</Text>
+                    <Text style={styles.cityTitle}>{weather?.name || 'Loading...'}{weather?.sys?.country ? `, ${weather.sys.country}` : ''}</Text>
+
                     <View style={styles.iconContainer}>
                         {weather && (
                             <MaterialCommunityIcons
@@ -204,7 +212,7 @@ export default function HomeScreen() {
     );
 }
 
-const createStyles = (theme) => StyleSheet.create({
+const createStyles = (theme:MD3Theme) => StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
